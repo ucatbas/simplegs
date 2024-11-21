@@ -67,9 +67,10 @@ func (s *InMemoryStorage) GetScheduledJobs() ([]*models.Request, error) {
 
 	// Collect jobs that are scheduled for now or before
 	var jobList []*models.Request
-	for _, job := range s.jobs {
+	for i, job := range s.jobs {
 		if job.Status == "pending" && (job.ScheduledTime.Before(now) || job.ScheduledTime.Equal(now)) {
 			jobList = append(jobList, job)
+			s.jobs[i].Status = "processing"
 		}
 	}
 
